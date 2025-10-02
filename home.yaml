@@ -1,0 +1,28 @@
+alias: Notify Telegram on Presence
+description: Sends a Telegram message when Vivek comes online/offline
+trigger:
+  - platform: state
+    entity_id: person.vivek
+    to: "home"   # Trigger when person arrives home
+  - platform: state
+    entity_id: person.vivek
+    to: "not_home"  # Trigger when person leaves
+action:
+  - choose:
+      - conditions:
+          - condition: state
+            entity_id: person.vivek
+            state: "home"
+        sequence:
+          - service: notify.telegram_vivek
+            data:
+              message: "🏠 Vivek is now online at home!"
+      - conditions:
+          - condition: state
+            entity_id: person.vivek
+            state: "not_home"
+        sequence:
+          - service: notify.telegram_vivek
+            data:
+              message: "🚪 Vivek is now offline / away."
+mode: single
